@@ -1,0 +1,18 @@
+html,
+body {
+  min-height: 100%;
+}
+
+html {
+  background-image: url("landing-page.png");
+  background-size: 1500px 800px;
+  background-position: top center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-color: #050505;
+}
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+}

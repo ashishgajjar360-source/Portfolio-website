@@ -1,0 +1,57 @@
+---
+const cards = [
+  {
+    eyebrow: "Hello,",
+    name: "I am Ashish Gajjar",
+    title: "Space",
+    tagline: "Living archive of ideas, pursuit of better design.",
+  },
+  {
+    eyebrow: "Work 01",
+    name: "Motion Studies",
+    title: "Rhythm",
+    tagline: "Explorations in pacing, spacing, and visual flow.",
+  },
+  {
+    eyebrow: "Work 02",
+    name: "Interface Notes",
+    title: "Form",
+    tagline: "Clean geometry, layered depth, and strong contrast.",
+  },
+  {
+    eyebrow: "Work 03",
+    name: "Visual Systems",
+    title: "Loop",
+    tagline: "Repeatable cards designed to flow across the screen.",
+  },
+];
+---
+
+<section class="scroller" data-horizontal-scroller aria-label="Horizontal portfolio cards">
+  <div class="scroller__viewport" data-horizontal-scroll-viewport>
+    <div class="scroller__track">
+      {[0, 1, 2].map((copyIndex) => (
+        <div class="scroller__group" aria-hidden={copyIndex !== 1 ? "true" : undefined}>
+          {cards.map((card) => (
+            <article class="card">
+              <div class="card__intro">
+                <p>{card.eyebrow}</p>
+                <p>{card.name}</p>
+              </div>
+
+              <h1 class="card__title">{card.title}</h1>
+
+              <p class="card__tagline">{card.tagline}</p>
+            </article>
+          ))}
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script type="module">
+  import { setupHorizontalScroll } from "../scripts/scrollMotion.js";
+
+  setupHorizontalScroll();
+</script>
