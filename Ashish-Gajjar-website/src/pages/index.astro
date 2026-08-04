@@ -53,16 +53,50 @@ const cards = [
 			const viewport = document.querySelector("[data-scroller-viewport]");
 			const track = document.querySelector("[data-scroller-track]");
 			const firstGroup = document.querySelector("[data-scroller-group]");
+			const cards = document.querySelectorAll(".card");
 
 			if (viewport && track && firstGroup) {
 				let groupWidth = 0;
 				let isSyncing = false;
+				let frameId = 0;
 
 				const setLoopPosition = () => {
 					groupWidth = firstGroup.getBoundingClientRect().width;
 					if (groupWidth > 0) {
 						viewport.scrollLeft = groupWidth;
 					}
+				};
+
+				const updateCardPerspective = () => {
+					frameId = 0;
+
+					if (!cards.length) {
+						return;
+					}
+
+					const viewportRect = viewport.getBoundingClientRect();
+					const viewportCenter = viewportRect.left + viewportRect.width / 2;
+
+					cards.forEach((card) => {
+						const rect = card.getBoundingClientRect();
+						const cardCenter = rect.left + rect.width / 2;
+						const offset = (cardCenter - viewportCenter) / (viewportRect.width / 2 || 1);
+						const distance = Math.min(1, Math.abs(offset));
+						const direction = offset < 0 ? 1 : -1;
+						const rotateY = direction * distance * 18;
+						const scale = 1 - distance * 0.08;
+
+						card.style.setProperty("--card-rotate", `${rotateY}deg`);
+						card.style.setProperty("--card-scale", scale.toFixed(3));
+					});
+				};
+
+				const requestCardPerspectiveUpdate = () => {
+					if (frameId) {
+						return;
+					}
+
+					frameId = window.requestAnimationFrame(updateCardPerspective);
 				};
 
 				const wrapScroll = () => {
@@ -85,14 +119,19 @@ const cards = [
 				};
 
 				setLoopPosition();
+				requestCardPerspectiveUpdate();
 				window.addEventListener("load", setLoopPosition);
 				window.addEventListener("resize", setLoopPosition);
-				viewport.addEventListener("scroll", wrapScroll, { passive: true });
+				viewport.addEventListener("scroll", () => {
+					wrapScroll();
+					requestCardPerspectiveUpdate();
+				}, { passive: true });
 
 				if (typeof ResizeObserver !== "undefined") {
 					const observer = new ResizeObserver(setLoopPosition);
 					observer.observe(track);
 					observer.observe(firstGroup);
+					observer.observe(viewport);
 				}
 			}
 		</script>
