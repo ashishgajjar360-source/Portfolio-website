@@ -1,6 +1,28 @@
 ---
 import "../Style/global.css";
 import "../Style/home-card.css";
+import HomeCard from "../components/HomeCard.astro";
+
+const cards = [
+	{
+		eyebrow: "Home",
+		title: "Space",
+		intro: ["Hello,", "I am Ashish Gajjar,", "& this is my web"],
+		tagline: ["Living archive of ideas,", "pursuit of Better Design."],
+	},
+	{
+		eyebrow: "Work",
+		title: "Rhythm",
+		intro: ["Selected work,", "shaping motion,", "layout, and flow"],
+		tagline: ["A focused collection of", "visual experiments."],
+	},
+	{
+		eyebrow: "Notes",
+		title: "Form",
+		intro: ["Ideas in progress,", "refined through", "spacing and contrast"],
+		tagline: ["Simple systems with", "a strong graphic edge."],
+	},
+];
 ---
 <html lang="en">
   <head>
@@ -12,23 +34,67 @@ import "../Style/home-card.css";
     <title>Ashish Gajjar's Portfolio</title>
   </head>
   <body>
-    <main class="frame">
-			<div class="card">
-				<h4 class="frame__nav">Home</h4>
-				<p class="card__intro">
-				Hello,
-				<br/>
-				I am Ashish Gajjar,
-				<br/>
-				& this is my web
-			</p>
-			<p class="card__title">Space</p>
-			<p class="card__tagline">
-				Living archive of ideas,
-				<br/>
-				pursuit of Better Design.
-			</p>
-			</div>
+	    <main class="frame">
+			<section class="scroller" aria-label="Horizontal portfolio cards">
+				<div class="scroller__viewport" data-scroller-viewport>
+					<div class="scroller__track" data-scroller-track>
+						<div class="scroller__group" data-scroller-group>
+							{cards.map((card) => <HomeCard {...card} />)}
+						</div>
+						<div class="scroller__group" aria-hidden="true">
+							{cards.map((card) => <HomeCard {...card} />)}
+						</div>
+					</div>
+				</div>
+			</section>
     </main>
+
+		<script is:inline>
+			const viewport = document.querySelector("[data-scroller-viewport]");
+			const track = document.querySelector("[data-scroller-track]");
+			const firstGroup = document.querySelector("[data-scroller-group]");
+
+			if (viewport && track && firstGroup) {
+				let groupWidth = 0;
+				let isSyncing = false;
+
+				const setLoopPosition = () => {
+					groupWidth = firstGroup.getBoundingClientRect().width;
+					if (groupWidth > 0) {
+						viewport.scrollLeft = groupWidth;
+					}
+				};
+
+				const wrapScroll = () => {
+					if (isSyncing || groupWidth === 0) {
+						return;
+					}
+
+					if (viewport.scrollLeft <= 0) {
+						isSyncing = true;
+						viewport.scrollLeft = groupWidth;
+						isSyncing = false;
+						return;
+					}
+
+					if (viewport.scrollLeft >= groupWidth * 2 - viewport.clientWidth) {
+						isSyncing = true;
+						viewport.scrollLeft = groupWidth;
+						isSyncing = false;
+					}
+				};
+
+				setLoopPosition();
+				window.addEventListener("load", setLoopPosition);
+				window.addEventListener("resize", setLoopPosition);
+				viewport.addEventListener("scroll", wrapScroll, { passive: true });
+
+				if (typeof ResizeObserver !== "undefined") {
+					const observer = new ResizeObserver(setLoopPosition);
+					observer.observe(track);
+					observer.observe(firstGroup);
+				}
+			}
+		</script>
   </body>
 </html>

@@ -1,0 +1,29 @@
+---
+const {
+  eyebrow = "Home",
+  title = "Space",
+  intro = ["Hello,", "I am Ashish Gajjar,", "& this is my web"],
+  tagline = ["Living archive of ideas,", "pursuit of Better Design."],
+} = Astro.props;
+---
+
+<article class="card">
+	<h4 class="frame__nav">{eyebrow}</h4>
+	<p class="card__intro">
+		{intro.map((line, index) => (
+			<>
+				{line}
+				{index < intro.length - 1 && <br />}
+			</>
+		))}
+	</p>
+	<p class="card__title">{title}</p>
+	<p class="card__tagline">
+		{tagline.map((line, index) => (
+			<>
+				{line}
+				{index < tagline.length - 1 && <br />}
+			</>
+		))}
+	</p>
+</article>

@@ -23,27 +23,65 @@ body {
 
 .frame {
   min-height: 100vh;
-  display: grid;
-  place-items: center;
-  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  padding: 1.5rem 0;
+}
+
+.scroller {
+  width: 100%;
+  height: 100%;
+  padding-block: 1rem;
+}
+
+.scroller__viewport {
+  width: 100%;
+  height: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scroller__track {
+  display: flex;
+  width: max-content;
+}
+
+.scroller__group {
+  margin-top: 100px;
+  margin-bottom: 100px;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 5rem;
+  padding-inline: 1.5rem;
+}
+
+.scroller__viewport::-webkit-scrollbar {
+  display: none;
 }
 
 .card {
   position: relative;
-  width: min(90vw, 40rem);
-  aspect-ratio: 3 / 2;
-  background-color: #eeeeee;
+  flex: none;
+  width: min(40vw, 58rem);
+  aspect-ratio: 4 / 3;
+  overflow: visible;
   border-radius: 1.5rem;
-  box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1);
+  background-color: #eeeeee;
+  box-shadow:
+    0 0px 36px rgba(0, 0, 0, 0.10),
+    0 0 0 1px rgba(0, 0, 0, 0.08);
 }
 
 .card__intro {
   position: absolute;
-  top: 21%;
-  left: 54%;
+  top: 27%;
+  left: 54.5%;
   transform: translateX(-50%);
-  text-align: left;
   width: min(100%, 18rem);
+  margin: 0;
+  text-align: left;
   font-size: clamp(0.95rem, 1.35vw, 1.15rem);
   line-height: 1.08;
   letter-spacing: -0.03em;
@@ -54,9 +92,9 @@ body {
   top: -6%;
   left: 27%;
   transform: translateX(-50%);
-  text-align: left;
   width: min(100%, 18rem);
   margin: 0;
+  text-align: left;
   font-size: clamp(0.95rem, 1.35vw, 1.15rem);
   line-height: 1.08;
   letter-spacing: -0.03em;
@@ -82,8 +120,8 @@ body {
 
 .card__tagline {
   position: absolute;
-  right: 2.7%;
-  bottom: 21%;
+  right: -1%;
+  bottom: 23%;
   width: min(100%, 17rem);
   margin: 0;
   text-align: left;
@@ -93,9 +131,13 @@ body {
 }
 
 @media (max-width: 900px) {
+  .scroller__group {
+    gap: 1rem;
+    padding-inline: 1rem;
+  }
+
   .card {
     width: min(80vw, 34rem);
-    aspect-ratio: 4 / 3;
   }
 
   .card__intro {
@@ -117,11 +159,6 @@ body {
 }
 
 @media (max-width: 560px) {
-  .scroller__group {
-    padding-inline: 1rem;
-    gap: 1rem;
-  }
-
   .card {
     width: min(84vw, 28rem);
   }
