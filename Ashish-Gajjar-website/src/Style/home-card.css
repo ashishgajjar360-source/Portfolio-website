@@ -1,63 +1,62 @@
+@font-face {
+  font-family: "Sora";
+  src: url("/typeface/fonts/Sora-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Sora";
+  src: url("/typeface/fonts/Sora-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  font-family: "Sora", sans-serif;
+  color: #111111;
+}
+
 .frame {
   min-height: 100vh;
   display: grid;
-  align-items: center;
-}
-
-.scroller {
-  width: 100%;
-  position: relative;
-}
-
-.scroller__viewport {
-  width: 100%;
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  overflow-x: auto;
-  overflow-y: hidden;
-  display: flex;
-  align-items: center;
-  scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
-  touch-action: pan-x;
-}
-
-.scroller__viewport::-webkit-scrollbar {
-  display: none;
-}
-
-.scroller__track {
-  display: flex;
-  width: max-content;
-}
-
-.scroller__group {
-  display: flex;
-  gap: 1.5rem;
-  padding-inline: 1.5rem;
+  place-items: center;
+  padding: 1.5rem;
 }
 
 .card {
   position: relative;
-  width: min(40vw, 58rem);
-  flex: 0 0 auto;
-  aspect-ratio: 4 / 3;
-  border-radius: 1rem;
-  background: #ffffff;
-  box-shadow:
-    0 24px 36px rgba(0, 0, 0, 0.26),
-    0 0 0 1px rgba(0, 0, 0, 0.08);
-  overflow: hidden;
+  width: min(90vw, 40rem);
+  aspect-ratio: 3 / 2;
+  background-color: #eeeeee;
+  border-radius: 1.5rem;
+  box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1);
 }
 
 .card__intro {
   position: absolute;
-  top: 27%;
-  left: 54.5%;
+  top: 21%;
+  left: 54%;
   transform: translateX(-50%);
   text-align: left;
   width: min(100%, 18rem);
+  font-size: clamp(0.95rem, 1.35vw, 1.15rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+}
+
+.frame__nav {
+  position: absolute;
+  top: -6%;
+  left: 27%;
+  transform: translateX(-50%);
+  text-align: left;
+  width: min(100%, 18rem);
+  margin: 0;
   font-size: clamp(0.95rem, 1.35vw, 1.15rem);
   line-height: 1.08;
   letter-spacing: -0.03em;
@@ -83,8 +82,8 @@
 
 .card__tagline {
   position: absolute;
-  right: -1%;
-  bottom: 23%;
+  right: 2.7%;
+  bottom: 21%;
   width: min(100%, 17rem);
   margin: 0;
   text-align: left;
