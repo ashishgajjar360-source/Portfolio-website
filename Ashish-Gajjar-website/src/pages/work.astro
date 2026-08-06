@@ -1,0 +1,42 @@
+---
+import "../Style/global.css";
+import "../Style/home-card.css";
+import HomeCard from "../components/HomeCard.astro";
+
+const workCard = {
+	eyebrow: "Work",
+	title: "Rhythm",
+	intro: ["Selected work,", "shaping motion,", "layout, and flow"],
+	tagline: ["A focused collection of", "visual experiments."],
+	href: "/specificwork",
+};
+---
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Work — Ashish Gajjar</title>
+    <style>
+      .card {
+        background-color: #ffffff;
+      }
+
+      .work-center {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        padding-inline: 1.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="frame">
+      <div class="work-center">
+        <HomeCard {...workCard} />
+      </div>
+    </main>
+  </body>
+</html>

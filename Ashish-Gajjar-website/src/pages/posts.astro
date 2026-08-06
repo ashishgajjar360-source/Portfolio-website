@@ -1,0 +1,243 @@
+---
+import "../Style/global.css";
+import "../Style/home-card.css";
+import "../Style/posts.css";
+
+const categories = [
+  { label: "Edits", active: false },
+  { label: "Typography", active: false },
+  { label: "Graphic", active: true },
+  { label: "Photography", active: false },
+  { label: "Edits", active: false },
+];
+
+const posts = [
+  { col: 1, aspect: "3/4" },
+  { col: 1, aspect: "4/5" },
+  { col: 2, aspect: "4/3" },
+  { col: 2, aspect: "3/4" },
+  { col: 2, aspect: "4/3" },
+  { col: 3, aspect: "3/4" },
+  { col: 3, aspect: "4/5" },
+];
+---
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Posts — Ashish Gajjar</title>
+  </head>
+  <body>
+    <main class="posts-page">
+      <!-- scrollable wrapper -->
+      <div class="masonry-container" data-masonry-container>
+        <!-- masonry grid -->
+        <div class="masonry">
+          <!-- column 1 -->
+          <div class="masonry__col" data-col>
+            <div class="masonry__col-inner">
+              {posts.filter(p => p.col === 1).map(p => (
+                <article class="post-card">
+                  <div class="post-card__image" style={`aspect-ratio: ${p.aspect};`}></div>
+                </article>
+              ))}
+              {posts.filter(p => p.col === 1).map(p => (
+                <article class="post-card" aria-hidden="true">
+                  <div class="post-card__image" style={`aspect-ratio: ${p.aspect};`}></div>
+                </article>
+              ))}
+            </div>
+          </div>
+          <!-- column 2 -->
+          <div class="masonry__col" data-col>
+            <div class="masonry__col-inner">
+              {posts.filter(p => p.col === 2).map(p => (
+                <article class="post-card">
+                  <div class="post-card__image" style={`aspect-ratio: ${p.aspect};`}></div>
+                </article>
+              ))}
+              {posts.filter(p => p.col === 2).map(p => (
+                <article class="post-card" aria-hidden="true">
+                  <div class="post-card__image" style={`aspect-ratio: ${p.aspect};`}></div>
+                </article>
+              ))}
+            </div>
+          </div>
+          <!-- column 3 -->
+          <div class="masonry__col" data-col>
+            <div class="masonry__col-inner">
+              {posts.filter(p => p.col === 3).map(p => (
+                <article class="post-card">
+                  <div class="post-card__image" style={`aspect-ratio: ${p.aspect};`}></div>
+                </article>
+              ))}
+              {posts.filter(p => p.col === 3).map(p => (
+                <article class="post-card" aria-hidden="true">
+                  <div class="post-card__image" style={`aspect-ratio: ${p.aspect};`}></div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </div>
+        <!-- scroll height generator -->
+        <div class="scroll-mimic"></div>
+      </div>
+
+      <!-- category sidebar -->
+      <nav class="sidebar" aria-label="Post categories">
+        <div class="sidebar-highlight"></div>
+        <div class="sidebar-viewport" data-sidebar-viewport>
+          <div class="sidebar__inner" data-sidebar-group>
+            {categories.map(cat => (
+              <span class={`sidebar__item ${cat.active ? "sidebar__item--active" : ""}`}>
+                {cat.label}
+              </span>
+            ))}
+          </div>
+          <div class="sidebar__inner" aria-hidden="true">
+            {categories.map(cat => (
+              <span class={`sidebar__item ${cat.active ? "sidebar__item--active" : ""}`}>
+                {cat.label}
+              </span>
+            ))}
+          </div>
+          <div class="sidebar__inner" aria-hidden="true">
+            {categories.map(cat => (
+              <span class={`sidebar__item ${cat.active ? "sidebar__item--active" : ""}`}>
+                {cat.label}
+              </span>
+            ))}
+          </div>
+        </div>
+      </nav>
+    </main>
+
+    <script is:inline>
+      const container = document.querySelector("[data-masonry-container]");
+      const columns = document.querySelectorAll("[data-col]");
+
+      if (container && columns.length > 0) {
+        const colStates = Array.from(columns).map((col) => {
+          const inner = col.querySelector(".masonry__col-inner");
+          const cards = inner ? inner.querySelectorAll(".post-card:not([aria-hidden])") : [];
+          return {
+            element: col,
+            inner: inner,
+            cards: cards,
+            groupHeight: 0,
+          };
+        });
+
+        const measureColumns = () => {
+          colStates.forEach((state) => {
+            if (!state.inner) return;
+            let h = 0;
+            state.cards.forEach((card) => {
+              h += card.getBoundingClientRect().height;
+            });
+            const gap = parseFloat(getComputedStyle(state.inner).gap) || 24;
+            h += gap * state.cards.length;
+            state.groupHeight = h;
+          });
+        };
+
+        const setInitialPositions = () => {
+          measureColumns();
+          colStates.forEach((state) => {
+            if (state.groupHeight > 0) {
+              state.element.scrollTop = state.groupHeight;
+            }
+          });
+        };
+
+        // Initialize scroll positions
+        let lastScrollTop = 5000;
+        container.scrollTop = 5000;
+        setInitialPositions();
+
+        const syncScroll = () => {
+          const currentScrollTop = container.scrollTop;
+          const delta = currentScrollTop - lastScrollTop;
+          lastScrollTop = currentScrollTop;
+
+          colStates.forEach((state, index) => {
+            if (state.groupHeight === 0) return;
+            
+            // Flip direction for middle column (index 1)
+            const currentDelta = (index === 1) ? -delta : delta;
+            let newScrollTop = state.element.scrollTop + currentDelta;
+
+            // Wrap each column independently based on its group height
+            if (newScrollTop <= 0) {
+              newScrollTop += state.groupHeight;
+            } else if (newScrollTop >= state.groupHeight * 2 - state.element.clientHeight) {
+              newScrollTop -= state.groupHeight;
+            }
+
+            state.element.scrollTop = newScrollTop;
+          });
+
+          // Loop container scroll boundaries
+          if (currentScrollTop < 2000 || currentScrollTop > 8000) {
+            container.scrollTop = 5000;
+            lastScrollTop = 5000;
+          }
+        };
+
+        container.addEventListener("scroll", syncScroll, { passive: true });
+        window.addEventListener("load", setInitialPositions);
+        window.addEventListener("resize", () => {
+          measureColumns();
+        });
+      }
+
+      // category sidebar infinite scrolling
+      const sidebar = document.querySelector("[data-sidebar-viewport]");
+      const firstSidebarGroup = document.querySelector("[data-sidebar-group]");
+
+      if (sidebar && firstSidebarGroup) {
+        let sidebarGroupHeight = 0;
+        let sidebarSyncing = false;
+
+        const measureSidebar = () => {
+          sidebarGroupHeight = firstSidebarGroup.getBoundingClientRect().height;
+          // Add the gap between groups inside sidebar flex layout
+          const gap = parseFloat(getComputedStyle(sidebar).gap) || 12;
+          sidebarGroupHeight += gap;
+        };
+
+        const wrapSidebarScroll = () => {
+          if (sidebarSyncing || sidebarGroupHeight === 0) return;
+          const currentScrollTop = sidebar.scrollTop;
+
+          // Seamless loop check
+          if (currentScrollTop <= 0) {
+            sidebarSyncing = true;
+            sidebar.scrollTop = sidebarGroupHeight;
+            sidebarSyncing = false;
+          } else if (currentScrollTop >= sidebarGroupHeight) {
+            sidebarSyncing = true;
+            sidebar.scrollTop = currentScrollTop - sidebarGroupHeight;
+            sidebarSyncing = false;
+          }
+        };
+
+        measureSidebar();
+        // Start at groupHeight so we can scroll up or down infinitely
+        sidebar.scrollTop = sidebarGroupHeight;
+
+        sidebar.addEventListener("scroll", wrapSidebarScroll, { passive: true });
+        window.addEventListener("load", () => {
+          measureSidebar();
+          sidebar.scrollTop = sidebarGroupHeight;
+        });
+        window.addEventListener("resize", () => {
+          measureSidebar();
+        });
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,168 @@
+---
+import "../Style/global.css";
+import "../Style/specificwork.css";
+---
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Work — Ashish Gajjar</title>
+  </head>
+  <body>
+    <main class="specific-page">
+      <!-- Top Navigation -->
+      <nav class="top-nav" aria-label="Main Navigation">
+        <div class="top-nav__left">
+          <a href="/work" class="top-nav__link-left" id="nav-work-left">• Work</a>
+        </div>
+        <div class="top-nav__right">
+          <a href="/" class="top-nav__link-right" id="nav-home">Home</a>
+          <a href="/work" class="top-nav__link-right" id="nav-work">Work</a>
+          <a href="/posts" class="top-nav__link-right" id="nav-dp">DP</a>
+          <a href="/collections" class="top-nav__link-right" id="nav-collections">Collections</a>
+        </div>
+      </nav>
+
+      <!-- Infinite Scroll Showcase Container -->
+      <div class="showcase-container" data-showcase-container>
+        
+        <!-- Hero Card Section (Scrolls naturally, does not repeat) -->
+        <section class="layout-card hero-container" aria-label="Featured visual">
+          <div class="visual-placeholder">
+            <span>Hero Image Placeholder</span>
+          </div>
+        </section>
+
+        <!-- Sub Projects Grid Section (Sticky top, loops internally) -->
+        <section class="sub-projects-grid" aria-label="Sub project visuals">
+          
+          <!-- Column 1 -->
+          <div class="sub-projects-col" data-col>
+            <div class="sub-projects-col-inner">
+              {[1, 2, 3, 4].map((i) => (
+                <article class="layout-card" {...(i > 1 ? { "aria-hidden": "true" } : {})} id={`sub-card-col1-${i}`}>
+                  <div class="visual-placeholder">
+                    <span>Image Placeholder 01</span>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+
+          <!-- Column 2 -->
+          <div class="sub-projects-col" data-col>
+            <div class="sub-projects-col-inner">
+              {[1, 2, 3, 4].map((i) => (
+                <article class="layout-card" {...(i > 1 ? { "aria-hidden": "true" } : {})} id={`sub-card-col2-${i}`}>
+                  <div class="visual-placeholder">
+                    <span>Image Placeholder 02</span>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+
+        </section>
+        
+        <!-- scroll height generator -->
+        <div class="scroll-mimic"></div>
+      </div>
+    </main>
+
+    <script is:inline>
+      const container = document.querySelector("[data-showcase-container]");
+      const heroContainer = document.querySelector(".hero-container");
+      const columns = document.querySelectorAll("[data-col]");
+
+      if (container && columns.length > 0) {
+        const colStates = Array.from(columns).map((col) => {
+          const inner = col.querySelector(".sub-projects-col-inner");
+          const cards = inner ? inner.querySelectorAll(".layout-card:not([aria-hidden])") : [];
+          return {
+            element: col,
+            inner: inner,
+            cards: cards,
+            groupHeight: 0,
+          };
+        });
+
+        const measureColumns = () => {
+          colStates.forEach((state) => {
+            if (!state.inner) return;
+            let h = 0;
+            state.cards.forEach((card) => {
+              h += card.getBoundingClientRect().height;
+            });
+            const gap = parseFloat(getComputedStyle(state.inner).gap) || 32;
+            h += gap * state.cards.length;
+            state.groupHeight = h;
+          });
+        };
+
+        const measureHeroLimit = () => {
+          if (!heroContainer) return 0;
+          const rect = heroContainer.getBoundingClientRect();
+          // margin-top: 2rem adds 32px gap
+          return rect.height + 32;
+        };
+
+        const setInitialPositions = () => {
+          measureColumns();
+          colStates.forEach((state) => {
+            if (state.groupHeight > 0) {
+              state.element.scrollTop = 0; // Lock columns at 0 initially
+            }
+          });
+        };
+
+        const syncScroll = () => {
+          const currentScrollTop = container.scrollTop;
+          const heroScrollLimit = measureHeroLimit();
+          const firstCol = colStates[0];
+
+          colStates.forEach((state) => {
+            if (state.groupHeight === 0) return;
+
+            if (currentScrollTop < heroScrollLimit) {
+              // Lock columns scroll to 0 while Hero Card is still in view
+              state.element.scrollTop = 0;
+            } else {
+              // Once Hero Card is scrolled out, columns scroll and wrap infinitely in unison
+              const activeScroll = currentScrollTop - heroScrollLimit;
+              const newScrollTop = activeScroll % state.groupHeight;
+              state.element.scrollTop = newScrollTop;
+            }
+          });
+
+          // Loop container scroll boundaries on desktop to keep scroll area infinite
+          if (currentScrollTop > 8000 && firstCol.groupHeight > 0) {
+            const loopOffset = Math.floor((8000 - heroScrollLimit) / firstCol.groupHeight) * firstCol.groupHeight;
+            container.scrollTop = currentScrollTop - loopOffset;
+          }
+        };
+
+        // Initialize scroll position
+        setInitialPositions();
+        container.scrollTop = 0;
+
+        // Forward document-wide mousewheel to the container on desktop viewports
+        document.addEventListener("wheel", (e) => {
+          if (window.innerWidth > 900) {
+            container.scrollTop += e.deltaY;
+          }
+        }, { passive: true });
+
+        container.addEventListener("scroll", syncScroll, { passive: true });
+        window.addEventListener("load", () => {
+          setInitialPositions();
+        });
+        window.addEventListener("resize", () => {
+          measureColumns();
+        });
+      }
+    </script>
+  </body>
+</html>
