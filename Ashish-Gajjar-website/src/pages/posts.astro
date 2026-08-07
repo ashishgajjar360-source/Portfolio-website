@@ -32,6 +32,11 @@ const posts = [
   </head>
   <body>
     <main class="posts-page">
+      <!-- Back Button -->
+      <a href="/" class="back-button" id="back-to-home" aria-label="Back to Home">
+        ←
+      </a>
+
       <!-- scrollable wrapper -->
       <div class="masonry-container" data-masonry-container>
         <!-- masonry grid -->
@@ -40,14 +45,14 @@ const posts = [
           <div class="masonry__col" data-col>
             <div class="masonry__col-inner">
               {posts.filter(p => p.col === 1).map(p => (
-                <article class="post-card">
+                <a href="/posts-details" class="post-card" aria-label="View post detail">
                   <div class="post-card__image" style={`aspect-ratio: ${p.aspect};`}></div>
-                </article>
+                </a>
               ))}
               {posts.filter(p => p.col === 1).map(p => (
-                <article class="post-card" aria-hidden="true">
+                <a href="/posts-details" class="post-card" tabindex="-1" aria-hidden="true">
                   <div class="post-card__image" style={`aspect-ratio: ${p.aspect};`}></div>
-                </article>
+                </a>
               ))}
             </div>
           </div>
@@ -55,14 +60,14 @@ const posts = [
           <div class="masonry__col" data-col>
             <div class="masonry__col-inner">
               {posts.filter(p => p.col === 2).map(p => (
-                <article class="post-card">
+                <a href="/posts-details" class="post-card" aria-label="View post detail">
                   <div class="post-card__image" style={`aspect-ratio: ${p.aspect};`}></div>
-                </article>
+                </a>
               ))}
               {posts.filter(p => p.col === 2).map(p => (
-                <article class="post-card" aria-hidden="true">
+                <a href="/posts-details" class="post-card" tabindex="-1" aria-hidden="true">
                   <div class="post-card__image" style={`aspect-ratio: ${p.aspect};`}></div>
-                </article>
+                </a>
               ))}
             </div>
           </div>
@@ -70,14 +75,14 @@ const posts = [
           <div class="masonry__col" data-col>
             <div class="masonry__col-inner">
               {posts.filter(p => p.col === 3).map(p => (
-                <article class="post-card">
+                <a href="/posts-details" class="post-card" aria-label="View post detail">
                   <div class="post-card__image" style={`aspect-ratio: ${p.aspect};`}></div>
-                </article>
+                </a>
               ))}
               {posts.filter(p => p.col === 3).map(p => (
-                <article class="post-card" aria-hidden="true">
+                <a href="/posts-details" class="post-card" tabindex="-1" aria-hidden="true">
                   <div class="post-card__image" style={`aspect-ratio: ${p.aspect};`}></div>
-                </article>
+                </a>
               ))}
             </div>
           </div>
@@ -90,23 +95,9 @@ const posts = [
       <nav class="sidebar" aria-label="Post categories">
         <div class="sidebar-highlight"></div>
         <div class="sidebar-viewport" data-sidebar-viewport>
-          <div class="sidebar__inner" data-sidebar-group>
+          <div class="sidebar__inner">
             {categories.map(cat => (
-              <span class={`sidebar__item ${cat.active ? "sidebar__item--active" : ""}`}>
-                {cat.label}
-              </span>
-            ))}
-          </div>
-          <div class="sidebar__inner" aria-hidden="true">
-            {categories.map(cat => (
-              <span class={`sidebar__item ${cat.active ? "sidebar__item--active" : ""}`}>
-                {cat.label}
-              </span>
-            ))}
-          </div>
-          <div class="sidebar__inner" aria-hidden="true">
-            {categories.map(cat => (
-              <span class={`sidebar__item ${cat.active ? "sidebar__item--active" : ""}`}>
+              <span class="sidebar__item">
                 {cat.label}
               </span>
             ))}
@@ -194,49 +185,34 @@ const posts = [
         });
       }
 
-      // category sidebar infinite scrolling
-      const sidebar = document.querySelector("[data-sidebar-viewport]");
-      const firstSidebarGroup = document.querySelector("[data-sidebar-group]");
+      // Sidebar: dynamically bold the item centered in the highlight rectangle
+      const sidebarViewport = document.querySelector("[data-sidebar-viewport]");
+      if (sidebarViewport) {
+        const updateCenteredItem = () => {
+          const items = sidebarViewport.querySelectorAll(".sidebar__item");
+          const viewportRect = sidebarViewport.getBoundingClientRect();
+          const centerY = viewportRect.top + viewportRect.height / 2;
+          let closestItem = null;
+          let closestDist = Infinity;
 
-      if (sidebar && firstSidebarGroup) {
-        let sidebarGroupHeight = 0;
-        let sidebarSyncing = false;
+          items.forEach((item) => {
+            const itemRect = item.getBoundingClientRect();
+            const itemCenterY = itemRect.top + itemRect.height / 2;
+            const dist = Math.abs(itemCenterY - centerY);
+            if (dist < closestDist) {
+              closestDist = dist;
+              closestItem = item;
+            }
+          });
 
-        const measureSidebar = () => {
-          sidebarGroupHeight = firstSidebarGroup.getBoundingClientRect().height;
-          // Add the gap between groups inside sidebar flex layout
-          const gap = parseFloat(getComputedStyle(sidebar).gap) || 12;
-          sidebarGroupHeight += gap;
+          items.forEach((item) => {
+            item.classList.toggle("sidebar__item--active", item === closestItem);
+          });
         };
 
-        const wrapSidebarScroll = () => {
-          if (sidebarSyncing || sidebarGroupHeight === 0) return;
-          const currentScrollTop = sidebar.scrollTop;
-
-          // Seamless loop check
-          if (currentScrollTop <= 0) {
-            sidebarSyncing = true;
-            sidebar.scrollTop = sidebarGroupHeight;
-            sidebarSyncing = false;
-          } else if (currentScrollTop >= sidebarGroupHeight) {
-            sidebarSyncing = true;
-            sidebar.scrollTop = currentScrollTop - sidebarGroupHeight;
-            sidebarSyncing = false;
-          }
-        };
-
-        measureSidebar();
-        // Start at groupHeight so we can scroll up or down infinitely
-        sidebar.scrollTop = sidebarGroupHeight;
-
-        sidebar.addEventListener("scroll", wrapSidebarScroll, { passive: true });
-        window.addEventListener("load", () => {
-          measureSidebar();
-          sidebar.scrollTop = sidebarGroupHeight;
-        });
-        window.addEventListener("resize", () => {
-          measureSidebar();
-        });
+        sidebarViewport.addEventListener("scroll", updateCenteredItem, { passive: true });
+        window.addEventListener("load", updateCenteredItem);
+        updateCenteredItem();
       }
     </script>
   </body>

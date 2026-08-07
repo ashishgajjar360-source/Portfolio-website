@@ -1,0 +1,67 @@
+---
+import "../Style/global.css";
+import "../Style/posts-details.css";
+---
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Chalse — Ashish Gajjar</title>
+  </head>
+  <body>
+    <main class="posts-detail-page">
+      <!-- Top Navigation -->
+      <nav class="top-nav" aria-label="Main Navigation">
+        <div class="top-nav__left">
+          <a href="/posts" class="top-nav__link-left" id="nav-posts-left">• Posts</a>
+        </div>
+        <div class="top-nav__right">
+          <a href="/" class="top-nav__link-right" id="nav-home">Home</a>
+          <a href="/work" class="top-nav__link-right" id="nav-work">Work</a>
+          <a href="/posts" class="top-nav__link-right" id="nav-dp">DP</a>
+          <a href="/collections" class="top-nav__link-right" id="nav-collections">Collections</a>
+        </div>
+      </nav>
+
+      <!-- Main Detail Wrapper -->
+      <div class="posts-detail-wrapper">
+        <!-- Post Detail Card -->
+        <article class="post-detail-card">
+          
+          <!-- Left Column: Image Placeholder -->
+          <div class="post-detail-visual">
+            <div class="visual-placeholder">
+              <span class="visual-placeholder__text">Image Placeholder</span>
+              <span class="visual-placeholder__subtext">Chalse Poster Visual</span>
+            </div>
+          </div>
+
+          <!-- Right Column: Content -->
+          <div class="post-detail-content">
+            <div>
+              <h1 class="post-detail-title">Chalse</h1>
+
+              <div class="post-detail-body">
+                <p>
+                  "ચાલશે" (Chalse) is more than just a Gujarati word —it reflects a familiar mindset. It's the phrase people casually use when something is "good enough," often carrying a sense of comfort, laziness, or postponement. This artwork translates that everyday expression into typography by embedding meaning directly into its letterforms.
+                </p>
+                <p>
+                  The first letter subtly incorporates a pair of crossed feet, symbolizing the relaxed posture of someone sitting back with the attitude of "It'll do." Rather than simply writing the word, the typography illustrates the behavior it represents. Combined with vibrant colors and playful forms, the design captures the lighthearted yet relatable nature of this common Gujarati expression, transforming a spoken phrase into a visual narrative.
+                </p>
+              </div>
+            </div>
+
+            <!-- Signature -->
+            <div class="post-detail-signature">
+              -Ashish Gajjar
+            </div>
+          </div>
+
+        </article>
+      </div>
+    </main>
+  </body>
+</html>

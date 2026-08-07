@@ -1,0 +1,217 @@
+body {
+  background-color: #eeeeee;
+  margin: 0;
+  font-family: "Sora", sans-serif;
+  color: #111111;
+  min-height: 100vh;
+}
+
+.posts-detail-page {
+  max-width: 1250px;
+  margin: 0 auto;
+  padding: 2.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  box-sizing: border-box;
+  gap: 2.5rem;
+}
+
+/* ── Top Navigation ── */
+.top-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.top-nav__left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.top-nav__link-left {
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-decoration: none;
+  color: #111111;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.top-nav__right {
+  display: flex;
+  align-items: center;
+  gap: 2.25rem;
+}
+
+.top-nav__link-right {
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-decoration: none;
+  color: #111111;
+  transition: opacity 200ms ease;
+}
+
+.top-nav__link-right:hover {
+  opacity: 0.6;
+}
+
+/* ── Main Detail Wrapper ── */
+.posts-detail-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+/* ── Post Detail Card ── */
+.post-detail-card {
+  background-color: #ffffff;
+  border-radius: 1.8rem;
+  box-shadow:
+    0 10px 40px rgba(0, 0, 0, 0.03),
+    0 0 0 1px rgba(0, 0, 0, 0.02);
+  width: 100%;
+  max-width: 1100px;
+  padding: 3rem 3.5rem;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: minmax(280px, 360px) 1fr;
+  gap: 4rem;
+  align-items: start;
+}
+
+/* ── Left Visual / Poster Placeholder ── */
+.post-detail-visual {
+  width: 100%;
+  aspect-ratio: 1 / 1.55;
+  border-radius: 0.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.visual-placeholder {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(145deg, #2652a2 0%, #1d3e7d 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  color: #ffffff;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.visual-placeholder__text {
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  opacity: 0.9;
+  text-transform: uppercase;
+}
+
+.visual-placeholder__subtext {
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+  opacity: 0.6;
+}
+
+/* ── Right Content Column ── */
+.post-detail-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.post-detail-title {
+  font-size: 3.25rem;
+  font-weight: 700;
+  color: #000000;
+  margin: 0 0 1.75rem 0;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.post-detail-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.post-detail-body p {
+  font-size: 1.1rem;
+  line-height: 1.55;
+  color: #111111;
+  margin: 0;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+.post-detail-signature {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #000000;
+  text-align: right;
+  margin-top: 3rem;
+  letter-spacing: -0.01em;
+}
+
+/* ── Responsive Breaks ── */
+@media (max-width: 900px) {
+  .posts-detail-page {
+    padding: 1.5rem 1.25rem;
+    gap: 1.5rem;
+  }
+
+  .post-detail-card {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 2rem 1.75rem;
+    border-radius: 1.4rem;
+  }
+
+  .post-detail-visual {
+    max-width: 320px;
+    margin: 0 auto;
+  }
+
+  .post-detail-title {
+    font-size: 2.25rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .post-detail-body p {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  .post-detail-signature {
+    margin-top: 2rem;
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .top-nav {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .top-nav__right {
+    width: 100%;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .top-nav__link-right {
+    font-size: 0.85rem;
+  }
+}
